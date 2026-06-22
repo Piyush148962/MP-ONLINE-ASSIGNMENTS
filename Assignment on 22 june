@@ -1,1 +1,75 @@
+Write a method that prints the default values of different C# types int, bool, string, DateTime. WAP To show Nullable<int> behaves when you assign null, compare it with another nullable, and use the HasValue and GetValueOrDefault properties. Convert hours to days days = h / 24. Find the age from entered date of birth
+using System;
 
+public class DefaultValuesDemo
+{
+    public static void PrintDefaultValues()
+    {
+        int defaultInt = default;
+        bool defaultBool = default;
+        string defaultString = default; // Note: This will be null
+        DateTime defaultDateTime = default;
+
+        Console.WriteLine($"Default int: {defaultInt}");
+        Console.WriteLine($"Default bool: {defaultBool}");
+        Console.WriteLine($"Default string: {(defaultString == null ? "null" : defaultString)}");
+        Console.WriteLine($"Default DateTime: {defaultDateTime}");
+    }
+}
+
+using System;
+
+public class NullableDemo
+{
+    public static void DemonstrateNullable()
+    {
+        // 1. Assigning null
+        int? nullableInt1 = null;
+        int? nullableInt2 = 42;
+        int? nullableInt3 = null;
+
+        Console.WriteLine("--- Checking Properties ---");
+        // Use HasValue and GetValueOrDefault
+        Console.WriteLine($"nullableInt1 HasValue: {nullableInt1.HasValue}");
+        Console.WriteLine($"nullableInt1 Value (OrDefault): {nullableInt1.GetValueOrDefault()}"); // Defaults to 0
+        
+        Console.WriteLine($"nullableInt2 HasValue: {nullableInt2.HasValue}");
+        Console.WriteLine($"nullableInt2 Value (OrDefault): {nullableInt2.GetValueOrDefault()}"); // Returns 42
+        Console.WriteLine($"nullableInt2 Value (With custom default): {nullableInt1.GetValueOrDefault(-1)}"); // Returns -1
+
+        Console.WriteLine("\n--- Comparisons ---");
+        // 2. Comparing nullables
+        Console.WriteLine($"Is nullableInt1 equal to nullableInt3 (null == null)? {nullableInt1 == nullableInt3}"); // True
+        Console.WriteLine($"Is nullableInt1 equal to nullableInt2 (null == 42)? {nullableInt1 == nullableInt2}"); // False
+        
+        // Relational comparisons with null always return false
+        Console.WriteLine($"Is nullableInt1 > nullableInt2 (null > 42)? {nullableInt1 > nullableInt2}"); // False
+    }
+}
+
+public static double ConvertHoursToDays(double hours)
+{
+    return hours / 24.0;
+}
+
+// Example usage:
+// double days = ConvertHoursToDays(36); // Returns 1.5
+
+using System;
+
+public class AgeCalculator
+{
+    public static int CalculateAge(DateTime dateOfBirth)
+    {
+        DateTime today = DateTime.Today;
+        int age = today.Year - dateOfBirth.Year;
+
+        // Go back one year if the birthday hasn't happened yet this year
+        if (dateOfBirth.Date > today.AddYears(-age))
+        {
+            age--;
+        }
+
+        return age;
+    }
+}
