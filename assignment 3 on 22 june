@@ -1,1 +1,113 @@
+print groups of anagrams from a given list   Make a basic number guessing challenge against the computer
 
+
+1. Grouping Anagrams
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class AnagramGrouper
+{
+    public static void GroupAndPrintAnagrams(List<string> words)
+    {
+        // Dictionary where Key = sorted word, Value = list of anagrams
+        Dictionary<string, List<string>> anagramGroups = new Dictionary<string, List<string>>();
+
+        foreach (string word in words)
+        {
+            // Normalize by converting to lowercase, then sort the characters
+            char[] chars = word.ToLower().ToCharArray();
+            Array.Sort(chars);
+            string sortedKey = new string(chars);
+
+            // Add the original word to its matching sorted group
+            if (!anagramGroups.ContainsKey(sortedKey))
+            {
+                anagramGroups[sortedKey] = new List<string>();
+            }
+            anagramGroups[sortedKey].Add(word);
+        }
+
+        // Print the grouped anagrams
+        Console.WriteLine("--- Anagram Groups ---");
+        foreach (var group in anagramGroups.Values)
+        {
+            Console.WriteLine($"[{string.Join(", ", group)}]");
+        }
+    }
+}
+
+Guessing Challenge
+
+
+## 2. Number Guessing Challenge
+This program generates a random number between 1 and 100, then guides the player to the answer with "Too high" or "Too low" hints, tracking their total attempts.
+
+```csharp
+using System;
+
+public class GuessingGame
+{
+    public static void StartChallenge()
+    {
+        Random random = new Random();
+        int targetNumber = random.Next(1, 101); // Random number between 1 and 100
+        int userGuess = 0;
+        int attempts = 0;
+
+        Console.WriteLine("=====================================");
+        Console.WriteLine("  Welcome to the Guessing Challenge! ");
+        Console.WriteLine("=====================================");
+        Console.WriteLine("I am thinking of a number between 1 and 100.");
+
+        // Game loop
+        while (userGuess != targetNumber)
+        {
+            Console.Write("\nEnter your guess: ");
+            string input = Console.ReadLine();
+
+            // Validate that the input is a valid integer
+            if (!int.TryParse(input, out userGuess))
+            {
+                Console.WriteLine("Please enter a valid number.");
+                continue;
+            }
+
+            attempts++;
+
+            if (userGuess < targetNumber)
+            {
+                Console.WriteLine("Too low! Try a higher number.");
+            }
+            else if (userGuess > targetNumber)
+            {
+                Console.WriteLine("Too high! Try a lower number.");
+            }
+            else
+            {
+                Console.WriteLine($"\n🎉 Congratulations! You guessed it right!");
+                Console.WriteLine($"The number was {targetNumber}. It took you {attempts} attempts.");
+            }
+        }
+    }
+}
+
+
+How to Run Both Together:
+
+public class Program
+{
+    public static void Main()
+    {
+        // Test Anagrams
+        List<string> wordList = new List<string> { "listen", "silent", "enlist", "rat", "tar", "apple" };
+        AnagramGrouper.GroupAndPrintAnagrams(wordList);
+
+        Console.WriteLine("\nPress Enter to start the guessing game...");
+        Console.ReadLine();
+        Console.Clear();
+
+        // Test Guessing Game
+        GuessingGame.StartChallenge();
+    }
+}
