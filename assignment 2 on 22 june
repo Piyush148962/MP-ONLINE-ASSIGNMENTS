@@ -1,1 +1,100 @@
+nput password and Find the Password strength based on following rules  Length should be 8  Must have one capital letter  One digit is compulsory   Password encoding/decoding based on following rules•⁠  ⁠Encodes it by:Shifting each character by +2 in the ASCII table (e.g., A → C, b → d).Reversing the entire string after shifting.•  Decodes it back to the original message by reversing the process.
+using System;
+using System.Linq;
 
+public class PasswordValidator
+{
+    public static string CheckPasswordStrength(string password)
+    {
+        if (string.IsNullOrEmpty(password))
+            return "Invalid: Password cannot be empty.";
+
+        // Rule 1: Length must be at least 8 characters
+        bool hasValidLength = password.Length >= 8;
+
+        // Rule 2: Must have at least one capital letter
+        bool hasCapitalLetter = password.Any(char.IsUpper);
+
+        // Rule 3: One digit is compulsory
+        bool hasDigit = password.Any(char.IsDigit);
+
+        // Evaluate overall strength
+        if (hasValidLength && hasCapitalLetter && hasDigit)
+        {
+            return "Strong Password";
+        }
+        else
+        {
+            // Build a helpful error message of what is missing
+            string missingRules = "Weak Password. Issues found: ";
+            if (!hasValidLength) missingRules += "[Must be at least 8 characters long] ";
+            if (!hasCapitalLetter) missingRules += "[Missing a capital letter] ";
+            if (!hasDigit) missingRules += "[Missing a digit] ";
+            
+            return missingRules.Trim();
+        }
+    }
+}
+using System;
+using System.Text;
+
+public class PasswordCipher
+{
+    // Encodes: Shift characters by +2, then reverse the string
+    public static string Encode(string password)
+    {
+        if (string.IsNullOrEmpty(password)) return password;
+
+        // Step 1: Shift each character by +2
+        char[] shiftedChars = new char[password.Length];
+        for (int i = 0; i < password.Length; i++)
+        {
+            shiftedChars[i] = (char)(password[i] + 2);
+        }
+
+        // Step 2: Reverse the shifted string
+        Array.Reverse(shiftedChars);
+        
+        return new string(shiftedChars);
+    }
+
+    // Decodes: Reverse the string first, then shift characters by -2
+    public static string Decode(string encodedPassword)
+    {
+        if (string.IsNullOrEmpty(encodedPassword)) return encodedPassword;
+
+        // Step 1: Reverse the string back
+        char[] reversedChars = encodedPassword.ToCharArray();
+        Array.Reverse(reversedChars);
+
+        // Step 2: Shift each character by -2
+        for (int i = 0; i < reversedChars.Length; i++)
+        {
+            reversedChars[i] = (char)(reversedChars[i] - 2);
+        }
+
+        return new string(reversedChars);
+    }
+}
+public class Program
+{
+    public static void Main()
+    {
+        Console.Write("Enter a password to test: ");
+        string input = Console.ReadLine();
+
+        // 1. Check Strength
+        string strengthResult = PasswordValidator.CheckPasswordStrength(input);
+        Console.WriteLine($"\nStrength Result: {strengthResult}");
+
+        Console.WriteLine("\n--- Running Cipher Test ---");
+        
+        // 2. Encode
+        string encrypted = PasswordCipher.Encode(input);
+        Console.WriteLine($"Encoded Password: {encrypted}");
+
+        // 3. Decode
+        string decrypted = PasswordCipher.Decode(encrypted);
+        Console.WriteLine($"Decoded Back:     {decrypted}");
+    }
+}
