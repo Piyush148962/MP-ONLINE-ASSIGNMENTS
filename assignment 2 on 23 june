@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
+
+namespace SalesReporting
+{
+    // 1. A class (DTO) to hold the results from the database
+    public class MonthlySalesSummary
+    {
+        public string SalesmanName { get; set; }
+        public string CategoryName { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public decimal TotalSales { get; set; }
+    }
+
+    public class SalesRepository
+    {
+        // Replace this with your actual database connection string
+        private readonly string _connectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;";
+
+        public List<MonthlySalesSummary> GetMonthlySalesGroupedBySalesmanAndCategory()
+        {
+            var results = new List<MonthlySalesSummary>();
+
+            // 2. The SQL Query doing the heavy lifting (Grouping by Month, Year, Salesman, and Category)
+            string query = @"
+                SELECT 
+                    s.Name AS SalesmanName,
+                    c.Name AS CategoryName,
+                    YEAR(o.OrderDate) AS SalesYear,
+                    MONTH(o.OrderDate) AS SalesMonth,
+                    SUM(o.TotalAmount) AS TotalSales
+                FROM Orders o
+                INNER JOIN Salesmen s ON o.SalesmanId = s.Id
+                INNER JOIN Categories c ON o.CategoryId = c.Id
+                GROUP BY 
+                    s.Name, 
+                    c.Name, 
+                    YEAR(o.OrderDate), 
+                    MONTH(o.OrderDate)
+                ORDER BY 
+                    SalesYear DESC, 
+                    SalesMonth DESC, 
+                    SalesmanName;
+            ";
+
+            // 3. SqlConnection: Manages the connection to the database
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                // 4. SqlCommand: Represents the SQL statement to execute
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        // Open the connection before executing
+                        connection.Open();
+
+                        // 5. SqlDataReader: Reads a forward-only stream of rows from the database
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Check if the query returned any rows
+                            if (reader.HasRows)
+                            {
+                                // Loop through each row in the result set
+                                while (reader.Read())
+                                {
+                                    var summary = new MonthlySalesSummary
+                                    {
+                                        // 6. Extracting data using column names and casting to the correct C# types
+                                        SalesmanName = reader["SalesmanName"].ToString(),
+                                        CategoryName = reader["CategoryName"].ToString(),
+                                        Year = Convert.ToInt32(reader["SalesYear"]),
+                                        Month = Convert.ToInt32(reader["SalesMonth"]),
+                                        TotalSales = Convert.ToDecimal(reader["TotalSales"])
+                                    };
+
+                                    results.Add(summary);
+                                }
+                            }
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Log database-specific errors here
+                        Console.WriteLine($"Database Error: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log general errors here
+                        Console.WriteLine($"General Error: {ex.Message}");
+                    }
+                    // The 'using' statements automatically close the connection and dispose of resources
+                }
+            }
+
+            return results;
+        }
+    }
+
+    // Example of how to call the method
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var repo = new SalesRepository();
+            var reportData = repo.GetMonthlySalesGroupedBySalesmanAndCategory();
+
+            Console.WriteLine("Monthly Sales Report:");
+            Console.WriteLine("---------------------------------------------------------");
+            foreach (var record in reportData)
+            {
+                Console.WriteLine($"{record.Month}/{record.Year} | {record.SalesmanName} | {record.CategoryName} | ${record.TotalSales}");
+            }
+        }
+    }
