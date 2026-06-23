@@ -1,1 +1,35 @@
+Sales by Salesman and Category.Total monthly sales grouped by salesman]
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+public class SaleRecord
+{
+    public string Salesman { get; set; }
+    public string Category { get; set; }
+    public string Month { get; set; }
+    public decimal Amount { get; set; }
+}
+
+
+. Query: Sales by Salesman and Category
+
+public static void PrintSalesBySalesmanAndCategory(List<SaleRecord> sales)
+{
+    Console.WriteLine("=== Sales by Salesman and Category ===");
+
+    var groupedData = sales
+        .GroupBy(s => new { s.Salesman, s.Category })
+        .Select(g => new
+        {
+            g.Key.Salesman,
+            g.Key.Category,
+            TotalAmount = g.Sum(s => s.Amount)
+        })
+        .OrderBy(r => r.Salesman);
+
+    foreach (var item in groupedData)
+    {
+        Console.WriteLine($"Salesman: {item.Salesman,-10} | Category: {item.Category,-12} | Total Sold: {item.TotalAmount:C}");
+    }
+}
