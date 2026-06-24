@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Savory Bistro - Menu & Reviews</title>
+    <style>
+        /* Base Reset & Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fcfbfa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #ff9f1c;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            position: relative;
+            color: #2ec4b6;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #ff9f1c;
+            margin: 10px auto 0;
+        }
+
+        /* --- MENU SECTION --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .menu-info {
+            padding: 20px;
+        }
+
+        .menu-title-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .menu-title-price h3 {
+            font-size: 1.3rem;
+            color: #111;
+        }
+
+        .price {
+            color: #ff9f1c;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .menu-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* --- MULTIMEDIA CONTROLS SECTION --- */
+        .media-section {
+            background-color: #f1f0ea;
+            padding: 40px 20px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .media-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .video-container, .audio-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+            outline: none;
+            background-color: #000;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            outline: none;
+        }
+
+        /* Styling native multimedia controls using CSS properties */
+        video::-webkit-media-controls-panel,
+        audio::-webkit-media-controls-panel {
+            background-color: #2ec4b6;
+        }
+
+        video::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-play-button {
+            background-color: #ff9f1c;
+            border-radius: 50%;
+        }
+
+        video::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-current-time-display {
+            color: white;
+            font-weight: bold;
+        }
+
+        /* --- REVIEWS SECTION --- */
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .review-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #ff9f1c;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .stars {
+            color: #ff9f1c;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .review-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .reviewer-name {
+            font-weight: bold;
+            color: #111;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        footer {
+            background-color: #111;
+            color: #aaa;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The Savory Bistro</h1>
+        <p>Fresh ingredients, timeless recipes, unforgettable moments</p>
+    </header>
+
+    <div class="container">
+
+        <section>
+            <h2>Our Signature Menu</h2>
+            <div class="menu-grid">
+                
+                <div class="menu-card">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80" alt="Margherita Pizza" class="menu-img">
+                    <div class="menu-info">
+                        <div class="menu-title-price">
+                            <h3>Artisan Margherita</h3>
+                            <span class="price">$14.99</span>
+                        </div>
+                        <p>Fresh mozzarella, san marzano tomatoes, torn basil, and a drizzle of extra virgin olive oil on a charred crust.</p>
+                    </div>
+                </div>
+
+                <div class="menu-card">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80" alt="Salmon Salad" class="menu-img">
+                    <div class="menu-info">
+                        <div class="menu-title-price">
+                            <h3>Pan-Seared Salmon Bowl</h3>
+                            <span class="price">$21.50</span>
+                        </div>
+                        <p>Atlantic salmon served over a bed of organic quinoa, roasted sweet potatoes, avocado slices, and citrus dressing.</p>
+                    </div>
+                </div>
+
+                <div class="menu-card">
+                    <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80" alt="Chocolate Lava Cake" class="menu-img">
+                    <div class="menu-info">
+                        <div class="menu-title-price">
+                            <h3>Molten Lava Cake</h3>
+                            <span class="price">$8.25</span>
+                        </div>
+                        <p>Rich Belgian chocolate cake with a delightfully liquid center, served alongside premium Madagascar vanilla bean gelato.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="media-section">
+            <h2>Experience The Vibe</h2>
+            <p>Take a virtual tour inside our kitchen and listen to our curated dinner playlist.</p>
+            
+            <div class="media-wrapper">
+                <div class="video-container">
+                    <h4 style="margin-bottom:10px;">Behind the Scenes</h4>
+                    <video controls poster="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=500&q=80">
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div class="audio-container">
+                    <h4 style="margin-bottom:10px;">Bistro Ambient Jazz</h4>
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">The exact tunes playing at our tables tonight.</p>
+                    <audio controls>
+                        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Guest Reviews</h2>
+            <div class="reviews-container">
+                
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"The Margherita pizza tasted just like the ones I had in Naples. Fantastic service and gorgeous rustic atmosphere!"</p>
+                    <div class="reviewer-name">— Sophia L.</div>
+                </div>
+
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"That molten lava cake is out of this world. I've recommended this place to all my friends already."</p>
+                    <div class="reviewer-name">— Marcus T.</div>
+                </div>
+
+                <div class="review-card">
+                    <div class="stars">★★★★☆</div>
+                    <p class="review-text">"Healthy and delicious options. The salmon was cooked to perfect crispiness. Will definitely dine here again."</p>
+                    <div class="reviewer-name">— Clara Henderson</div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 The Savory Bistro. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
