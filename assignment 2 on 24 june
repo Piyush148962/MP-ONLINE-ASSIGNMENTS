@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Journey - Photography Blog Gallery</title>
+    <style>
+        /* --- Base Theme Setup --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d0d11; /* Dark minimalist background to make photo colors pop */
+            color: #e2e8f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 50px auto;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: #8a8f98;
+            font-size: 1rem;
+        }
+
+        /* --- Responsive Grid Layout --- */
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            /* Auto-fit dynamically adjusts columns based on viewport size */
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-auto-rows: 280px;
+            gap: 20px;
+        }
+
+        /* --- Photography Item Cards --- */
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Creative variation: Make every 4th item wider on large screens */
+        @media(min-width: 900px) {
+            .gallery-item.featured {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* --- Hover Overlay Effects --- */
+        .item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .item-overlay h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            transform: translateY(15px);
+            transition: transform 0.4s ease;
+        }
+
+        .item-overlay span {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: translateY(15px);
+            transition: transform 0.4s ease 0.05s;
+        }
+
+        /* Triggering animations on hover */
+        .gallery-item:hover img {
+            transform: scale(1.06);
+        }
+
+        .gallery-item:hover .item-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item:hover .item-overlay h3,
+        .gallery-item:hover .item-overlay span {
+            transform: translateY(0);
+        }
+
+        /* --- CSS-Only Lightbox System --- */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(5, 5, 8, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Active Lightbox Trigger via URL Hash */
+        .lightbox:target {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #fff;
+            font-size: 2.5rem;
+            text-decoration: none;
+            font-weight: 200;
+            transition: color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Wanderlust</h1>
+        <p>A collection of cinematic landscape and street photography captured around the globe.</p>
+    </div>
+
+    <div class="gallery-container">
+        
+        <a href="#img1" class="gallery-item featured">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=80" alt="Yosemite Valley">
+            <div class="item-overlay">
+                <h3>Yosemite Valley Dawn</h3>
+                <span>Landscape / USA</span>
+            </div>
+        </a>
+
+        <a href="#img2" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=600&q=80" alt="Forest Pathway">
+            <div class="item-overlay">
+                <h3>Ethereal Woods</h3>
+                <span>Nature / Germany</span>
+            </div>
+        </a>
+
+        <a href="#img3" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80" alt="Misty Mountains">
+            <div class="item-overlay">
+                <h3>Alpine Fog</h3>
+                <span>Travel / Switzerland</span>
+            </div>
+        </a>
+
+        <a href="#img4" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&q=80" alt="Concert Lights">
+            <div class="item-overlay">
+                <h3>Electric Night</h3>
+                <span>Street / Japan</span>
+            </div>
+        </a>
+
+        <a href="#img5" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1472214222541-d510753a4707?auto=format&fit=crop&w=600&q=80" alt="Desert Dunes">
+            <div class="item-overlay">
+                <h3>Golden Ripples</h3>
+                <span>Minimalist / UAE</span>
+            </div>
+        </a>
+
+    </div>
+
+    <div id="img1" class="lightbox">
+        <a href="#" class="close-btn">&times;</a>
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=90" alt="Yosemite Valley">
+    </div>
+
+    <div id="img2" class="lightbox">
+        <a href="#" class="close-btn">&times;</a>
+        <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1400&q=90" alt="Forest Pathway">
+    </div>
+
+    <div id="img3" class="lightbox">
+        <a href="#" class="close-btn">&times;</a>
+        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1400&q=90" alt="Misty Mountains">
+    </div>
+
+    <div id="img4" class="lightbox">
+        <a href="#" class="close-btn">&times;</a>
+        <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1400&q=90" alt="Concert Lights">
+    </div>
+
+    <div id="img5" class="lightbox">
+        <a href="#" class="close-btn">&times;</a>
+        <img src="https://images.unsplash.com/photo-1472214222541-d510753a4707?auto=format&fit=crop&w=1400&q=90" alt="Desert Dunes">
+    </div>
+
+</body>
+</html>
