@@ -1,0 +1,55 @@
+1) Display Current Time
+using System;
+
+public class TimeDemo
+{
+    public static void ShowCurrentTime()
+    {
+        // Get the exact system date and time
+        DateTime currentTime = DateTime.Now;
+
+        Console.WriteLine("=== Current System Time ===");
+        // Displays both Date and Time based on system locale settings
+        Console.WriteLine($"Default Format:       {currentTime}"); 
+        
+        // Custom formatting options
+        Console.WriteLine($"Formatted (12-hour): {currentTime:yyyy-MM-dd hh:mm:ss tt}");
+        Console.WriteLine($"Formatted (24-hour): {currentTime:yyyy-MM-dd HH:mm:ss}");
+    }
+}
+
+
+
+2) Simple Calculator with basic add operation
+
+using System;
+
+public class SimpleCalculator
+{
+    public static void RunCalculator()
+    {
+        Console.WriteLine("=== Simple Addition Calculator ===");
+
+        // Get the first number input
+        Console.Write("Enter the first number: ");
+        if (!double.TryParse(Console.ReadLine(), out double num1))
+        {
+            Console.WriteLine("Invalid input! Please enter a numeric value.");
+            return;
+        }
+
+        // Get the second number input
+        Console.Write("Enter the second number: ");
+        if (!double.TryParse(Console.ReadLine(), out double num2))
+        {
+            Console.WriteLine("Invalid input! Please enter a numeric value.");
+            return;
+        }
+
+        // Perform basic addition operation
+        double result = num1 + num2;
+
+        // Print final result
+        Console.WriteLine($"\nResult: {num1} + {num2} = {result}");
+    }
+}
