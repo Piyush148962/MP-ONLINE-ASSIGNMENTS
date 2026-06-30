@@ -1,0 +1,138 @@
+• Create an account table to check the minimum balance, which should be more than zero. ~Kamal
+CREATE TABLE Customer (
+    CustomerID INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerName VARCHAR(100) NOT NULL,
+    Location VARCHAR(100) DEFAULT 'India'
+);
+
+
+• Create a ticket booking system. ~Kamal
+CREATE TABLE Accounts (
+    AccountNumber INT PRIMARY KEY,
+    AccountName VARCHAR(100) NOT NULL,
+    Balance DECIMAL(18,2) NOT NULL,
+    CONSTRAINT CHK_MinBalance CHECK (Balance > 0)
+);
+
+
+
+• Create a customer table with the customer country set to default as India. ~Kamal
+CREATE TABLE TicketBooking (
+    TicketID INT IDENTITY(1,1) PRIMARY KEY,
+    PassengerName VARCHAR(100) NOT NULL,
+    SourceCity VARCHAR(100) NOT NULL,
+    DestinationCity VARCHAR(100) NOT NULL,
+    BookingDate DATETIME DEFAULT GETDATE()
+);
+
+
+
+
+• Create a ticket booking system where the source city and destination city cannot be null. ~Vinaya Kulkarni
+CREATE TABLE Product (
+    ProductID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductName VARCHAR(100) NOT NULL,
+    QuantityInStock INT NOT NULL CHECK (QuantityInStock >= 0),
+    UnitPrice DECIMAL(18,2) NOT NULL CHECK (UnitPrice >= 0)
+);
+
+
+• Create a customer table where the default location of the customer should be India. ~Vinaya Kulkarni
+-- Seed Accounts Data
+INSERT INTO Accounts (AccountNumber, AccountName, Balance) VALUES 
+(101, 'Kamal', 1500.00),
+(102, 'Vinaya Kulkarni', 2500.50),
+(103, 'Suresh Kumar', 500.00);
+
+-- Seed Product Data
+INSERT INTO Product (ProductName, QuantityInStock, UnitPrice) VALUES 
+('Mechanical Keyboard', 45, 80.00),
+('Ergonomic Mouse', 120, 45.50),
+('UltraWide Monitor', 15, 350.00);
+
+
+
+• Create an account table where the minimum balance should be more than zero. ~Vinaya Kulkarni
+SELECT 
+    ProductID,
+    ProductName,
+    QuantityInStock,
+    UnitPrice,
+    (QuantityInStock * UnitPrice) AS TotalStockValue
+FROM Product;
+
+-- Aggregate valuation for the entire inventory
+SELECT SUM(QuantityInStock * UnitPrice) AS GrandTotalStockValue FROM Product;
+
+
+
+• Create an accounts table as part of the assignment based on the three types of soap procedures. ~Vinaya Kulkarni
+
+
+
+
+• Create an accounts table with account number, name, and balance. Ensure that the balance cannot be negative and insert some dummy data. ~Kamal
+
+• Create a stored procedure to show the transaction between a sender and receiver as a single unit, including parameters for the output and input. ~Kamal
+
+• Calculate the total stock value for the product table based on the provided assignment. ~Kamal
+
+
+
+CREATE PROCEDURE sp_ProcessTransaction
+    @SenderAcc INT,
+    @ReceiverAcc INT,
+    @Amount DECIMAL(18,2),
+    @StatusMessage VARCHAR(250) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    -- Start the atomic unit transaction
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- 1. Verify Sender Account Exists and Has Enough Funds
+        IF NOT EXISTS (SELECT 1 FROM Accounts WHERE AccountNumber = @SenderAcc)
+        BEGIN
+            SET @StatusMessage = 'Transaction Failed: Sender account does not exist.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF (SELECT Balance FROM Accounts WHERE AccountNumber = @SenderAcc) < @Amount
+        BEGIN
+            SET @StatusMessage = 'Transaction Failed: Insufficient funds in Sender account.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 2. Verify Receiver Account Exists
+        IF NOT EXISTS (SELECT 1 FROM Accounts WHERE AccountNumber = @ReceiverAcc)
+        BEGIN
+            SET @StatusMessage = 'Transaction Failed: Receiver account does not exist.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 3. Deduct from Sender
+        UPDATE Accounts 
+        SET Balance = Balance - @Amount 
+        WHERE AccountNumber = @SenderAcc;
+
+        -- 4. Add to Receiver
+        UPDATE Accounts 
+        SET Balance = Balance + @Amount 
+        WHERE AccountNumber = @ReceiverAcc;
+
+        -- Commit changes if all operations succeed
+        COMMIT TRANSACTION;
+        SET @StatusMessage = 'Transaction Completed Successfully.';
+    END TRY
+    BEGIN CATCH
+        -- Rollback changes if any system error occurs
+        ROLLBACK TRANSACTION;
+        SET @StatusMessage = 'Transaction Failed: Internal Error - ' + ERROR_MESSAGE();
+    END CATCH
+END;
+ 
