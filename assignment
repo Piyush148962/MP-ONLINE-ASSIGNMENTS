@@ -1,0 +1,99 @@
+public class Product
+   {
+       public string Id { get; set; }
+       public string Category { get; set; }
+       public string Name { get; set; }
+       public int Qty { get; set; }
+       public int Rate { get; set; }
+   }
+ 
+Add connection string into your appsettings.json file
+ 
+using Microsoft.EntityFrameworkCore;
+ 
+namespace Batch1RazorCRUD.Models
+
+{
+
+    public class ProductDataContext : DbContext
+
+    {
+ 
+        public ProductDataContext(DbContextOptions<ProductDataContext> options)
+
+         using Microsoft.EntityFrameworkCore;
+ 
+namespace Batch1RazorCRUD.Models
+
+{
+
+    public class ProductDataContext : DbContext
+
+    {
+ 
+        public ProductDataContext(DbContextOptions<ProductDataContext> options)
+
+            : base(options)
+
+        {
+
+        }
+ 
+        public DbSet<Batch1RazorCRUD.Models.Product> Product { get; set; } = default!;
+
+    }
+ 
+}
+
+ 
+    }
+
+}
+
+   : base(options)
+
+        {
+
+        }
+ 
+        public DbSet<Batch1RazorCRUD.Models.Product> Product { get; set; } = default!;
+
+    }
+ 
+}
+
+ 
+    }
+
+}
+
+ 
+public class ProductDataContextFactory
+
+{
+
+    public ProductDataContext CreateDbContext(string[] args)
+
+    {
+
+        var optionsBuilder = new DbContextOptionsBuilder<ProductDataContext>();
+ 
+        optionsBuilder.UseSqlServer(
+
+            "Server=.;Database=CRUDDB;Trusted_Connection=True;TrustServerCertificate=True;");
+ 
+        return new ProductDataContext(optionsBuilder.Options);
+
+    }
+
+}
+ 
+builder.Services.AddDbContext<ProductDataContext>(options =>
+
+options.UseSqlServer(
+
+     builder.Configuration.GetConnectionString("ConnectionStrings")));
+ 
+add-migration mydb
+ 
+Update-Database
