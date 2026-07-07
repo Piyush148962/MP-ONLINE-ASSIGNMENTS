@@ -1,0 +1,77 @@
+Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.26
+Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.26
+Install-Package Microsoft.EntityFrameworkCore.Design -Version 8.0.26 
+
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.26
+Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.26
+Install-Package Microsoft.EntityFrameworkCore.Design -Version 8.0.26
+
+
+using System;
+
+public class Student
+{
+    public int StudentId { get; set; } // Yeh apne aap Primary Key (Identity) ban jayega
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public DateTime EnrollmentDate { get; set; } = DateTime.Now;
+}
+
+
+using Microsoft.EntityFrameworkCore;
+
+public class SchoolContext : DbContext
+{
+    public DbSet<Student> Students { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        // Apni SQL Server ki connection string yahan daalein
+        optionsBuilder.UseSqlServer(@"Server=YOUR_SERVER_NAME;Database=SchoolEFCoreDB;Trusted_Connection=True;TrustServerCertificate=True;");
+    }
+}
+
+
+
+Add-Migration InitialCreate
+Update-Database
+
+
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        using (var db = new SchoolContext())
+        {
+            // 1. Naya Student Add Karna
+            Console.WriteLine("Adding a new student...");
+            var newStudent = new Student 
+            { 
+                FirstName = "Kamal", 
+                LastName = "Sharma", 
+                Email = "kamal.efcore@example.com" 
+            };
+            
+            db.Students.Add(newStudent);
+            db.SaveChanges(); // Yeh line data save kar degi
+            Console.WriteLine("Student saved successfully!\n");
+
+            // 2. Students Ki List Show Karna
+            Console.WriteLine("--- Registered Students List ---");
+            var studentList = db.Students.ToList();
+            
+            foreach (var student in studentList)
+            {
+                Console.WriteLine($"ID: {student.StudentId} | Name: {student.FirstName} {student.LastName} | Email: {student.Email}");
+            }
+        }
+    }
+}
+
+
+
